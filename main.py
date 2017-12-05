@@ -4,6 +4,7 @@ import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
 
 from models.perceptron import Perceptron
+from models.nn import NeuralNetwork
 
 
 BATCH_SIZE = 100
@@ -15,11 +16,16 @@ class ModelManager:
     def __init__(self):
         self.mnist_data = input_data.read_data_sets('data/', one_hot=True)
 
-    def train(self):
+        self.models = {
+            'perceptron': Perceptron,
+            'neural_network': NeuralNetwork,
+        }
+
+    def train(self, model_to_use='perceptron'):
         with tf.Session() as session:
             input = tf.placeholder(tf.float32, shape=[None, 784], name='input')
             labels = tf.placeholder(tf.float32, shape=[None, 10])
-            model = Perceptron()
+            model = self.models[model_to_use]()
 
             inference = model.infer(input)
             cost = model.cost(inference, labels)
