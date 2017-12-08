@@ -4,7 +4,7 @@ from models.basic_model import BasicModel
 
 
 class NeuralNetwork(BasicModel):
-    def infer(self, input):
+    def infer(self, input, train):
         layer_1 = tf.layers.dense(inputs=input, units=350,
                                   activation=tf.nn.relu)
 

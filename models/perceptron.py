@@ -4,7 +4,7 @@ from models.basic_model import BasicModel
 
 
 class Perceptron(BasicModel):
-    def infer(self, input):
+    def infer(self, input, train):
         y = tf.layers.dense(inputs=input, units=10,
                             activation=tf.nn.softmax, name='predict')
 

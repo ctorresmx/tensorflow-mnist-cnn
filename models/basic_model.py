@@ -1,7 +1,7 @@
 import tensorflow as tf
 
 class BasicModel:
-    def infer(self, input):
+    def infer(self, input, train):
         raise NotImplementedError()
 
     def cost(self, logits, labels):
