@@ -1,6 +1,7 @@
 # data and results folder
 data/
 results/
+trained_models/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

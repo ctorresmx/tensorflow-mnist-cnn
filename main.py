@@ -13,19 +13,25 @@ from utilities.logger import logger
 
 class ModelManager:
     def __init__(self, batch_size=100, epochs=5, log_dir='results/',
-                 model_to_use='perceptron'):
+                 save_dir='trained_models/', model_to_use='perceptron'):
         logger.info('Loading MNIST data...')
         self._mnist_data = input_data.read_data_sets('data/', one_hot=True)
         self._batch_size = batch_size
         self._epochs = epochs
         self._log_dir = log_dir
         self._model_to_use = model_to_use
+        self._save_model_path = '{}{}/model'.format(save_dir, model_to_use)
+
 
         self._models = {
             'cnn': ConvolutionalNeuralNetwork,
             'nn': NeuralNetwork,
             'perceptron': Perceptron,
         }
+
+    def _save_model(self, session):
+        save_path = self._saver.save(session, self._save_model_path)
+        logger.info('Saving checkpoint in file: {}'.format(save_path))
 
     def train(self):
         with tf.Session() as session:
@@ -44,6 +50,7 @@ class ModelManager:
 
             logger.info('Initializing variables...')
             session.run(tf.global_variables_initializer())
+            self._saver = tf.train.Saver()
             tf.summary.scalar('cost', cost)
             writer = tf.summary.FileWriter(self._log_dir, graph=tf.get_default_graph())
             summarize = tf.summary.merge_all()
@@ -70,8 +77,9 @@ class ModelManager:
                 labels: self._mnist_data.test.labels,
                 train: False,
             })
-
             logger.info('The accuracy is: {:.2f}%'.format(accuracy * 100))
+
+            self._save_model(session)
 
 
 if __name__ == '__main__':
